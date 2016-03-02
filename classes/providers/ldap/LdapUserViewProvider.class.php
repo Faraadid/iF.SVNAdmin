@@ -491,37 +491,63 @@ class LdapUserViewProvider extends \IF_AbstractLdapConnector
 				$u->name = $userEntry->$propName2;
 				$ret[] = $u;
 			}
-		}
-		return $ret;
-	}
+        }
+        return $ret;
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see svnadmin\core\interfaces.IGroupViewProvider::isUserInGroup()
-	 *
-	 * @todo Test me
-	 */
-	public function isUserInGroup($objUser, $objGroup)
-	{
-		// Get the user and group entry.
-		$userEntry = $this->p_findUserEntry($objUser);
-		$groupEntry = $this->p_findGroupEntry($objGroup);
+    /**
+     * (non-PHPdoc)
+     * @see svnadmin\core\interfaces.IGroupViewProvider::isUserInGroup()
+     *
+     * @todo Test me
+     */
+    public function isUserInGroup($objUser, $objGroup)
+    {
+        // Get the user and group entry.
+        $userEntry = $this->p_findUserEntry($objUser);
+        $groupEntry = $this->p_findGroupEntry($objGroup);
 
-		$propGroupName = strtolower($this->groups_attributes[0]);
+        $propGroupName = strtolower($this->groups_attributes[0]);
 
-		// Create filter to find the user as attribute inside the group.
-		$filter_user = $this->groups_to_users_attribute.'='.$userEntry->dn;
-		$filter_group = $this->groups_attributes[0].'='.$groupEntry->$propGroupName;
-		$filter = '(&('.$filter_user.')('.$filter_group.')'.$this->groups_search_filter.')';
+        // Create filter to find the user as attribute inside the group.
+        $filter_user = $this->groups_to_users_attribute.'='.$userEntry->dn;
+        $filter_group = $this->groups_attributes[0].'='.$groupEntry->$propGroupName;
+        $filter = '(&('.$filter_user.')('.$filter_group.')'.$this->groups_search_filter.')';
 
-		// Execute search.
-		$found = parent::objectSearch($this->connection, $this->groups_base_dn, $filter, $this->groups_attributes, 1);
+        // Execute search.
+        $found = parent::objectSearch($this->connection, $this->groups_base_dn, $filter, $this->groups_attributes, 1);
 
-		if (!is_array($found) || count($found) <= 0)
-			return false;
+        if (!is_array($found) || count($found) <= 0)
+            return false;
 
-		return true;
-	}
+        return true;
+    }
+
+    /*
+     *         * @todo Implement real function, this is a dummy implementation by nkh
+     *                 */
+    public function getGroupsOfSubgroup($objSubgroup)
+    {
+        $ret = array();
+        return $ret;
+    }
+
+    /*
+     *         * @todo Implement real function, this is a dummy implementation by nkh
+     *                 */
+    public function getSubgroupsOfGroup($objGroup)
+    {
+        $ret = array();
+        return $ret;
+    }
+
+    /*
+     *         * @todo Implement real function, this is a dummy implementation by nkh
+     *                 */
+    public function isSubgroupInGroup( $objSubgroup, $objGroup )
+    {
+        return false;
+    }
 
 	/**************************************************************************
 	 * Protected helper methods.
